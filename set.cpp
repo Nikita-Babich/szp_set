@@ -4,26 +4,24 @@
 #include <stdlib.h>
 #include <time.h>
 
-//new pointers
-//int* a = (int*) malloc(100 * sizeof(int));
-//int* b = (int*) malloc(100 * sizeof(int));
-//int* res = (int*) malloc(100 * sizeof(int));
+#define p(a) printf("\n%d\t",a)
 
-//int len(int* array){
-//	int size = sizeof(array)/sizeof(int);
-//	printf("%d - calculated length \n", size);
-//	return size;
-//}
+bool inside(int num, int* a){ //If num is in a
+	for (int i = 0; i<100; i++){
+		if(num==a[i]){	
+			return true;
+		}
+	}
+	return false;
+}
 
-void generate(int* a){
-	//fill with random numbers between 0 and 49;
+void generate(int* a){ //fill with random numbers between 0 and 49;
 	for (int i=0; i<100;i++){
 		a[i]=rand()%50;
 	}
 }
 
 void print_array(int* a){
-	//int length = len(a);
 	for (int i=0; i<100;i++){
 		printf("%d ",a[i]);
 	}
@@ -31,8 +29,6 @@ void print_array(int* a){
 
 void intersect(int* a, int* b){
 	
-	//sizeof()
-	//res = realloc(res, newSize);
 }
 
 void unite(){
@@ -45,5 +41,23 @@ main(){
 	
 	srand(time(0));
 	generate(a);
+	generate(b);
 	print_array(a);
 }
+
+//somment section
+//blocks of code to test, remember, correct and so on
+
+//sizeof()
+//res = realloc(res, newSize);
+
+//new pointers
+//int* a = (int*) malloc(100 * sizeof(int));
+//int* b = (int*) malloc(100 * sizeof(int));
+//int* res = (int*) malloc(100 * sizeof(int));
+
+//int len(int* array){
+//	int size = sizeof(array)/sizeof(int);
+//	printf("%d - calculated length \n", size);
+//	return size;
+//}
