@@ -9,35 +9,25 @@
 //int* b = (int*) malloc(100 * sizeof(int));
 //int* res = (int*) malloc(100 * sizeof(int));
 
-int len(int* array){
-	int size = sizeof(array)/sizeof(array[0]);
-	printf("%d - calculated length \n", size);
-	return size;
-}
+//int len(int* array){
+//	int size = sizeof(array)/sizeof(int);
+//	printf("%d - calculated length \n", size);
+//	return size;
+//}
 
 void generate(int* a){
 	//fill with random numbers between 0 and 49;
-	int length = len(a);
-	for (int i=0; i<length;i++){
+	for (int i=0; i<100;i++){
 		a[i]=rand()%50;
 	}
 }
 
 void print_array(int* a){
-	int length = len(a);
-	for (int i=0; i<length;i++){
+	//int length = len(a);
+	for (int i=0; i<100;i++){
 		printf("%d ",a[i]);
 	}
 }
-//void read_set1(){
-//	int read_index = 0;
-//	bool cont = true;
-//	if(id=="a"){
-//		for(int i=0; cont; i++){
-//			scanf("%d", )
-//		}
-//	}
-//}
 
 void intersect(int* a, int* b){
 	
@@ -54,6 +44,6 @@ main(){
 	int res[100];
 	
 	srand(time(0));
-	//generate(a);
+	generate(a);
 	print_array(a);
 }
