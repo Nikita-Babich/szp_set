@@ -7,7 +7,7 @@
 #define p(a) printf("\n%d\t",a)
 
 bool inside(int num, int* a){ //If num is in a
-	for (int i = 0; i<100; i++){
+	for (int i = 0; i<10; i++){
 		if(num==a[i]){	
 			return true;
 		}
@@ -15,34 +15,60 @@ bool inside(int num, int* a){ //If num is in a
 	return false;
 }
 
-void generate(int* a){ //fill with random numbers between 0 and 49;
-	for (int i=0; i<100;i++){
-		a[i]=rand()%50;
+void generate(int* a){ //fill with random numbers between 1 and 9;
+	for (int i=0; i<10;i++){
+		a[i]=rand()%9+1;
 	}
 }
 
 void print_array(int* a){
-	for (int i=0; i<100;i++){
-		printf("%d ",a[i]);
+	printf("\n");
+	for (int i=0; i<10;i++){
+		printf(" %d ",a[i]);
+	}
+	printf("\n");
+}
+
+void print_res(int* z){
+	printf("\n");
+	for (int i=0; i<20;i++){
+		if(z[i]!=0) {
+			printf(" %d ",z[i]);
+		}
+	}
+	printf("\n");
+}
+
+void intersect(int* a, int* b, int* z){
+	int index = 0;
+	for(int i=0;i<10;i++){
+		if(inside(a[i],b)){
+			z[index]=a[i];
+			index++;
+		}
+	}
+	for(;index<10;index++){
+		z[index]=0;
 	}
 }
 
-void intersect(int* a, int* b){
+void unite(int* a, int* b, int* z){
 	
 }
 
-void unite(){
-}
-
 main(){
-	int a[100] = {6,7,8,77,88};
-	int b[100] = {8,7,5};
-	int res[100];
+	int a[10];
+	int b[10];
+	int res[20]={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}; //zero stands for empty
 	
 	srand(time(0));
 	generate(a);
 	generate(b);
 	print_array(a);
+	print_array(b);
+	
+	intersect(a,b,res);
+	print_res(res);
 }
 
 //somment section
