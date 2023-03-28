@@ -4,6 +4,22 @@
 #include <stdlib.h>
 #include <time.h>
 
+#define REP(i, a, b) for (int i=a; i<=b; i++)
+
+struct set {
+	int length;
+	int a[];
+};
+
+set* rand_set(int maxlength){ //constructor
+	int length = rand()%maxlength;
+	set* ptr = (set*) malloc(n*(length+1));
+	ptr->length = length;
+	for(int i=0; i<length;i++){
+		ptr->a[i] = rand();
+	}
+};
+
 //bool inside(int num, int * a){ //ci num patri do a
 //	int asize = sizeof(a)/4;
 //	for (int i = 0; i<asize; i++){
