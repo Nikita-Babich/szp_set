@@ -27,19 +27,18 @@ print_set(set* ptr){
 	}
 }
 
-int shrink(set* ptr){
-	
+bool inside(int num, set* ptr){
+	for (int i = 0; i<ptr->length; i++){
+		if(num==ptr->array[i]){
+			return true;
+		}
+	}
+	return false;
 }
 
-//bool inside(int num, int * a){ //ci num patri do a
-//	int asize = sizeof(a)/4;
-//	for (int i = 0; i<asize; i++){
-//		if(num==a[i]){	
-//			return true;
-//		}
-//	}
-//	return false;
-//}
+int shrink(set* ptr){
+}
+
 //
 //int * truncate(int *a, int last_index){
 //	int result[last_index+1];
@@ -89,6 +88,8 @@ int main(){
 	print_set(a);
 	set* b = rand_set(5,10);
 	print_set(b);
+	
+	printf("\n %d ", inside(5,b));
 	
 	free(a); free(b);
 }
