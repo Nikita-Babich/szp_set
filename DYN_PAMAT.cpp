@@ -8,15 +8,14 @@
 
 struct set {
 	int length;
-	int a[];
+	int array[];
 };
 
-set* rand_set(int maxlength){ //constructor
-	int length = rand()%maxlength;
+set* rand_set(int length, int maxnum){ //constructor
 	set* ptr = (set*) malloc(sizeof(int)*(length+1));
 	(ptr->length) = length;
 	for(int i=0; i<length;i++){
-		(ptr->a)[i] = rand();
+		(ptr->array)[i] = rand()%maxnum;
 	}
 	return ptr;
 };
@@ -24,8 +23,12 @@ set* rand_set(int maxlength){ //constructor
 print_set(set* ptr){
 	printf("\n %d - size of the set\n", ptr->length);
 	for(int i=0; i < (ptr->length); i++){
-		printf("%d ", (ptr->a)[i]);
+		printf("%d ", (ptr->array)[i]);
 	}
+}
+
+int shrink(set* ptr){
+	
 }
 
 //bool inside(int num, int * a){ //ci num patri do a
@@ -80,53 +83,12 @@ print_set(set* ptr){
 //	return result;
 //}
 
-struct sset{ //
-	int size;
-	int *set;
-};
-
-void r(int* set, int* size){
-	printf("\ninput size of set a\n");
-	scanf("%d", size);
-	int msize = (*size)*sizeof(int);
-	set = (int*) malloc(msize);
-	for(int i =0; i<(*size); i++){
-		scanf("%d", &(set[i]));
-	}
-}
-
-void p(int* set, int *size){
-	printf("\n");
-	for(int i =0; i<(*size); i++){
-		printf("%d\t", set[i]);
-	}	
-	printf("\n");
-}
-
 int main(){
 	srand(time(NULL));
-	print_set(rand_set(5));
-	print_set(rand_set(15));
+	set* a = rand_set(10,10);
+	print_set(a);
+	set* b = rand_set(5,10);
+	print_set(b);
+	
+	free(a); free(b);
 }
-
-//struct set set_a,set_b;
-//	struct set* ptr_a, ptr_b;
-//	 
-//	 
-//	int *a; int *b;
-//	int sizea, sizeb;
-//	int msizea, msizeb;
-//	 
-//	r(a, &sizea);
-//	p(a, &sizea);
-//
-//	free(a); free(b);
-	
-	
-//	short int *buf;
-//	short int i;
-//	buf = malloc(5*sizeof(short int));
-//	buf[2]=5;
-//	free(buff);
-	
-	//not use smerniks with scanf
