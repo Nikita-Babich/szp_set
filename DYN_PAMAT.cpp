@@ -36,7 +36,11 @@ bool inside(int num, set* ptr){
 	return false;
 }
 
-int shrink(set* ptr){
+set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
+	
+}
+
+set* shrink(set* ptr){ //return the same pointer
 }
 
 //
