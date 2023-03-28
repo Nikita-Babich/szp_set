@@ -13,12 +13,20 @@ struct set {
 
 set* rand_set(int maxlength){ //constructor
 	int length = rand()%maxlength;
-	set* ptr = (set*) malloc(n*(length+1));
-	ptr->length = length;
+	set* ptr = (set*) malloc(sizeof(int)*(length+1));
+	(ptr->length) = length;
 	for(int i=0; i<length;i++){
-		ptr->a[i] = rand();
+		(ptr->a)[i] = rand();
 	}
+	return ptr;
 };
+
+print_set(set* ptr){
+	printf("\n %d - size of the set\n", ptr->length);
+	for(int i=0; i < (ptr->length); i++){
+		printf("%d ", (ptr->a)[i]);
+	}
+}
 
 //bool inside(int num, int * a){ //ci num patri do a
 //	int asize = sizeof(a)/4;
@@ -87,7 +95,7 @@ void r(int* set, int* size){
 	}
 }
 
-void p(int* set,int *size){
+void p(int* set, int *size){
 	printf("\n");
 	for(int i =0; i<(*size); i++){
 		printf("%d\t", set[i]);
@@ -96,16 +104,25 @@ void p(int* set,int *size){
 }
 
 int main(){
-	int *a; int *b;
-	int sizea, sizeb;
-	int msizea, msizeb;
-	
-	r(a, &sizea);
-	p(a, &sizea);
-
-	free(a); free(b);
-	
+	srand(time(NULL));
+	print_set(rand_set(5));
+	print_set(rand_set(15));
 }
+
+//struct set set_a,set_b;
+//	struct set* ptr_a, ptr_b;
+//	 
+//	 
+//	int *a; int *b;
+//	int sizea, sizeb;
+//	int msizea, msizeb;
+//	 
+//	r(a, &sizea);
+//	p(a, &sizea);
+//
+//	free(a); free(b);
+	
+	
 //	short int *buf;
 //	short int i;
 //	buf = malloc(5*sizeof(short int));
