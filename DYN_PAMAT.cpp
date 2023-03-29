@@ -69,7 +69,7 @@ set* copy_set(set* ptr){
 	//not working correctly
 	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
 	newptr->length = ptr->length;
-	for(int i=0; i<newptr->length; i++){
+	for(int i=0; i < newptr->length; i++){
 		newptr->array[i] = ptr->array[i];
 	}
 	return newptr;
