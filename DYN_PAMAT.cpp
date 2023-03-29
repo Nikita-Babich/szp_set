@@ -37,6 +37,7 @@ bool inside(int num, set* ptr){
 }
 
 set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
+	//works as expected
 	int minlen = (ptr1->length) < (ptr2->length) ? (ptr1->length) : (ptr2->length); 
 	set* newptr = (set*) malloc(sizeof(int)*(minlen+1)); //might allocate bigger than needed, but a minimal safe size: intersection cannot be smaller than the first set
 	newptr->length = 0;
@@ -49,7 +50,8 @@ set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
 	return newptr;
 }
 
-set* bubble_sort(set* ptr){ //return the same pointer
+set* bubble_sort(set* ptr){ //return the same pointer 
+	//works as expected
 	int helper;
 	for(int i=0; i < ptr->length-1; i++){
 		for(int j = 0; j < ptr->length-i-1; j++){
@@ -64,6 +66,7 @@ set* bubble_sort(set* ptr){ //return the same pointer
 }
 
 set* copy_set(set* ptr){
+	//not working correctly
 	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
 	newptr->length = ptr->length;
 	for(int i=0; i<newptr->length; i++){
@@ -72,8 +75,27 @@ set* copy_set(set* ptr){
 	return newptr;
 }
 
-//set* shrink(set* ptr){ //return the same pointer
-//}
+set* copy2_set(set* ptr){
+	//not working correctly
+	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
+	*newptr = *ptr;
+	return newptr;
+}
+
+set* shrink(set* ptr){ //return the same pointer 
+	//not working correctly
+	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
+	newptr->length = 0;
+	for(int i=0; i<ptr->length; i++){
+		if( !(inside(ptr->array[i], newptr)) ){
+			newptr->array[newptr->length] = ptr->array[i];
+			newptr->length++;
+		}
+	}
+	*ptr = *newptr;
+	free(newptr);
+	return ptr;
+}
 
 //
 //int * truncate(int *a, int last_index){
@@ -129,9 +151,12 @@ int main(){
 	print_set(bubble_sort(c));
 	
 	set* d = copy_set(c);
-	print_set(d);
+	print_set(shrink(d));
+	
+	set* e = copy2_set(c);
+	print_set(shrink(e));
 	
 	//printf("\n %d ", inside(5,b));
 	
-	free(a); free(b); free(c); free(d);
+	free(a); free(b); free(c); free(d); free(e);
 }
