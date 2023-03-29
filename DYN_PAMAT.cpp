@@ -42,11 +42,25 @@ set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
 	newptr->length = 0;
 	for (int i = 0; i<ptr1->length; i++){
 		if(inside(ptr1->array[i], ptr2)){
-			newptr->array[newptr->length] = ptr1->array[i];
+			newptr->array[newptr->length] = ptr1->array[i]; //because length is used like growing index
 			newptr->length++;
 		}
 	}
 	return newptr;
+}
+
+set* bubble_sort(set* ptr){
+	int helper;
+	for(int i=0; i < ptr->length-1; i++){
+		for(int j = 0; j < ptr->length-i-1; j++){
+			if(ptr->array[j] > ptr->array[j+1]){
+				helper = ptr->array[j];
+				ptr->array[j] = ptr->array[j+1];
+				ptr->array[j+1] = helper;
+			}
+		}
+	}
+	return ptr;
 }
 
 //set* shrink(set* ptr){ //return the same pointer
@@ -99,11 +113,11 @@ int main(){
 	srand(time(NULL));
 	set* a = rand_set(10,10);
 	print_set(a);
-	set* b = rand_set(5,10);
+	set* b = rand_set(10,10);
 	print_set(b);
 	
 	set* c = intersect(a,b);
-	print_set(c);
+	print_set(bubble_sort(c));
 	
 	//printf("\n %d ", inside(5,b));
 	
