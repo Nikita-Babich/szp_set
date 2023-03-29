@@ -20,12 +20,11 @@ set* rand_set(int length, int maxnum){ //constructor of random set
 	return ptr;
 };
 
-int print_set(set* ptr){
+void print_set(set* ptr){
 	printf("\n %d - size of the set\n", ptr->length);
 	for(int i=0; i < (ptr->length); i++){
 		printf("%d ", (ptr->array)[i]);
 	}
-	return 1;
 }
 
 bool inside(int num, set* ptr){
