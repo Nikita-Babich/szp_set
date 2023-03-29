@@ -21,7 +21,7 @@ set* rand_set(int length, int maxnum){ //constructor of random set
 };
 
 void print_set(set* ptr){
-	printf("\n %d - size of the set\n", ptr->length);
+	printf("\n %d - size of the set at 0x%.8X\n", ptr->length, ptr);
 	for(int i=0; i < (ptr->length); i++){
 		printf("%d ", (ptr->array)[i]);
 	}
@@ -49,7 +49,7 @@ set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
 	return newptr;
 }
 
-set* bubble_sort(set* ptr){
+set* bubble_sort(set* ptr){ //return the same pointer
 	int helper;
 	for(int i=0; i < ptr->length-1; i++){
 		for(int j = 0; j < ptr->length-i-1; j++){
@@ -61,6 +61,15 @@ set* bubble_sort(set* ptr){
 		}
 	}
 	return ptr;
+}
+
+set* copy_set(set* ptr){
+	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
+	newptr->length = ptr->length;
+	for(int i=0; i<newptr->length; i++){
+		newptr->array[i] = ptr->array[i];
+	}
+	return newptr;
 }
 
 //set* shrink(set* ptr){ //return the same pointer
@@ -118,6 +127,9 @@ int main(){
 	
 	set* c = intersect(a,b);
 	print_set(bubble_sort(c));
+	
+	set* d = copy_set(c);
+	print_set(d);
 	
 	//printf("\n %d ", inside(5,b));
 	
