@@ -11,7 +11,7 @@ struct set {
 	int array[];
 };
 
-set* rand_set(int length, int maxnum){ //constructor
+set* rand_set(int length, int maxnum){ //constructor of random set
 	set* ptr = (set*) malloc(sizeof(int)*(length+1));
 	(ptr->length) = length;
 	for(int i=0; i<length;i++){
@@ -20,11 +20,12 @@ set* rand_set(int length, int maxnum){ //constructor
 	return ptr;
 };
 
-print_set(set* ptr){
+int print_set(set* ptr){
 	printf("\n %d - size of the set\n", ptr->length);
 	for(int i=0; i < (ptr->length); i++){
 		printf("%d ", (ptr->array)[i]);
 	}
+	return 1;
 }
 
 bool inside(int num, set* ptr){
@@ -37,11 +38,20 @@ bool inside(int num, set* ptr){
 }
 
 set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
-	
+	int minlen = (ptr1->length) < (ptr2->length) ? (ptr1->length) : (ptr2->length); 
+	set* newptr = (set*) malloc(sizeof(int)*(minlen+1)); //might allocate bigger than needed, but a minimal safe size: intersection cannot be smaller than the first set
+	newptr->length = 0;
+	for (int i = 0; i<ptr1->length; i++){
+		if(inside(ptr1->array[i], ptr2)){
+			newptr->array[newptr->length] = ptr1->array[i];
+			newptr->length++;
+		}
+	}
+	return newptr;
 }
 
-set* shrink(set* ptr){ //return the same pointer
-}
+//set* shrink(set* ptr){ //return the same pointer
+//}
 
 //
 //int * truncate(int *a, int last_index){
@@ -93,7 +103,10 @@ int main(){
 	set* b = rand_set(5,10);
 	print_set(b);
 	
-	printf("\n %d ", inside(5,b));
+	set* c = intersect(a,b);
+	print_set(c);
 	
-	free(a); free(b);
+	//printf("\n %d ", inside(5,b));
+	
+	free(a); free(b); free(c);
 }
