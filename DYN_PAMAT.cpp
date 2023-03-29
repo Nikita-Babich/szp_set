@@ -133,5 +133,5 @@ int main(){
 	
 	//printf("\n %d ", inside(5,b));
 	
-	free(a); free(b); free(c);
+	free(a); free(b); free(c); free(d);
 }
