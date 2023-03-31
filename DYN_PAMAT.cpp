@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdarg.h>
 
 #define nl printf("\n")
 
@@ -22,6 +23,18 @@ set* rand_set(int length, int maxstep){ //constructor of sorted random set
 	}
 	return ptr;
 };
+
+set* create_set(int length, ...){
+	va_list valist;
+	va_start(valist, length);
+	set* ptr = (set*) malloc(sizeof(int)*(length+1));
+	(ptr->length) = length;
+	for(int i=0; i<length;i++){
+		(ptr->array)[i] = va_arg(valist, int);
+	}
+	va_end(valist);
+	return ptr;
+}
 
 void print_set(set* ptr){
 	printf("\n 0x%.8X with the size %d \n", ptr, ptr->length);
@@ -166,24 +179,36 @@ set* shrink2(set* ptr){ //return the same pointer
 
 int main(){
 	srand(time(NULL));
-	printf("\nRandom set a:\n");
+	printf("\nRandom set a:");
 	set* a = rand_set(10,3);
 	print_set(a);
 	
-	printf("\nRandom set b:\n");
+	printf("\nRandom set b:");
 	set* b = rand_set(10,3);
 	print_set(b);	
 	
-	printf("\nIntersection of a and b:\n");
+	printf("\nIntersection of a and b:");
 	set* c = intersect_sorted(a,b);
 	print_set(c);
 	
-	printf("\nUnion of a and b:\n");
-	set* d = union_sorted(a,b);
-	print_set(d);
-
+	printf("\nUnion of a and b:");
+	c = union_sorted(a,b);
+	print_set(c); free(c);
 	
-	free(a); free(b); free(c); free(d); 
+	printf("\n Handcrafted set e:");
+	set* e = create_set(10, 2,3,2,12,5,5,2,4,5,8);
+	print_set(e);
+	
+	printf("\n Sorted set e:");
+	e = bubble_sort(e);
+	print_set(e);
+	
+	printf("\n New set c equals shrunk set e:");
+	c = shrink_sorted(e);
+	print_set(c);
+	
+	printf("\n Now that 'cleaned set' c can be used with set functions");
+
 }
 
 //plans: union, create with variable amount of arguments
