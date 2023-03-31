@@ -12,12 +12,14 @@ struct set {
 	// if needed to axpand the struct add int* array; at the start
 };
 
-set* rand_set(int length, int maxnum){ //constructor of random set
+set* rand_set(int length, int maxstep){ //constructor of sorted random set
 	srand(time(NULL));
+	int value = 0;
 	set* ptr = (set*) malloc(sizeof(int)*(length+1));
 	(ptr->length) = length;
 	for(int i=0; i<length;i++){
-		(ptr->array)[i] = rand()%maxnum;
+		value += 1+rand()%maxstep;
+		(ptr->array)[i] = value;
 	}
 	return ptr;
 };
@@ -60,17 +62,17 @@ set* intersect_sorted(set* ptr1, set*ptr2){ //pointer to a new set
 	int index1 = 0;
 	int index2 = 0;
 	newptr->length = 0;
-	int a1=ptr1->array[index1];
-	int a2=ptr2->array[index2];
-	int recent;
 	while( index1 < ptr1->length && index2 < ptr2->length ){
-		if( ptr1->array[index1++] < ptr2->array[index2]){
+		if( ptr1->array[index1] < ptr2->array[index2]){
 			newptr->array[newptr->length] = ptr1->array[index1];
-		} else if (ptr1->array[index1] > ptr2->array[index2++]){
+			index1++;
+		} else if (ptr1->array[index1] > ptr2->array[index2]){
 			newptr->array[newptr->length] = ptr2->array[index2];
+			index2++;
 		} else {
 			newptr->array[newptr->length] = ptr2->array[index2];
-			index1++;	index2++;
+			index1++;	
+			index2++;
 		}
 		newptr->length++;
 	}
@@ -104,14 +106,13 @@ set* copy_set(set* ptr){
 
 set* shrink_sorted(set* ptr){ // O(n), return new ptr
 	int recent=ptr->array[0];
-	
 	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
 	newptr->array[0] = recent;
 	newptr->length = 1;
 	for(int i=1; i<ptr->length; i++){
 		if( ptr->array[i] != recent){
 			recent = ptr->array[i];
-			newptr->array[newptr->length] = recent;
+			newptr->array[newptr->length] = ptr->array[i];
 			newptr->length++;
 		}
 	}
@@ -128,7 +129,7 @@ set* shrink2(set* ptr){ //return the same pointer
 			newptr->length++;
 		}
 	}
-	ptr = copy_set(newptr); //*ptr = *newptr;
+	ptr = copy_set(newptr);
 	free(newptr);
 	return ptr;
 }
