@@ -68,7 +68,7 @@ set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
 }
 
 set* intersect_sorted(set* ptr1, set*ptr2){ //pointer to a new set
-	// O(n+m), not yet working correctly
+	// O(n+m), working correctly
 	int minlen = (ptr1->length) < (ptr2->length) ? (ptr1->length) : (ptr2->length); 
 	set* newptr = (set*) malloc(sizeof(int)*(minlen+1));
 	int index1 = 0;
@@ -189,7 +189,7 @@ int main(){
 	
 	printf("\nIntersection of a and b:");
 	set* c = intersect_sorted(a,b);
-	print_set(c);
+	print_set(c); free(c);
 	
 	printf("\nUnion of a and b:");
 	c = union_sorted(a,b);
