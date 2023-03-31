@@ -13,7 +13,6 @@ struct set {
 };
 
 set* rand_set(int length, int maxstep){ //constructor of sorted random set
-	srand(time(NULL));
 	int value = 0;
 	set* ptr = (set*) malloc(sizeof(int)*(length+1));
 	(ptr->length) = length;
@@ -64,9 +63,30 @@ set* intersect_sorted(set* ptr1, set*ptr2){ //pointer to a new set
 	newptr->length = 0;
 	while( index1 < ptr1->length && index2 < ptr2->length ){
 		if( ptr1->array[index1] < ptr2->array[index2]){
+			index1++;
+		} else if( ptr1->array[index1] > ptr2->array[index2]){
+			index2++;
+		} else {
+			newptr->array[newptr->length] = ptr2->array[index2];
+			index1++;	
+			index2++;
+			newptr->length++;
+		}
+	}
+	return newptr;
+}
+
+set* union_sorted(set* ptr1, set*ptr2){
+	int maxlen = ptr1->length + ptr2->length ; 
+	set* newptr = (set*) malloc(sizeof(int)*(maxlen+1));
+	int index1 = 0;
+	int index2 = 0;
+	newptr->length = 0;
+	while( index1 < ptr1->length && index2 < ptr2->length ){
+		if( ptr1->array[index1] < ptr2->array[index2]){
 			newptr->array[newptr->length] = ptr1->array[index1];
 			index1++;
-		} else if (ptr1->array[index1] > ptr2->array[index2]){
+		} else if( ptr1->array[index1] > ptr2->array[index2]){
 			newptr->array[newptr->length] = ptr2->array[index2];
 			index2++;
 		} else {
@@ -75,6 +95,16 @@ set* intersect_sorted(set* ptr1, set*ptr2){ //pointer to a new set
 			index2++;
 		}
 		newptr->length++;
+	}
+	while(index1 < ptr1->length){
+		newptr->array[newptr->length] = ptr1->array[index1];
+		newptr->length++;
+		index1++;
+	}
+	while(index2 < ptr2->length){
+		newptr->array[newptr->length] = ptr2->array[index2];
+		newptr->length++;
+		index2++;
 	}
 	return newptr;
 }
@@ -135,26 +165,22 @@ set* shrink2(set* ptr){ //return the same pointer
 }
 
 int main(){
-	
-	set* a = rand_set(10,10);
+	srand(time(NULL));
+	printf("\nRandom set a:\n");
+	set* a = rand_set(10,3);
 	print_set(a);
-	a=shrink2(bubble_sort(a));
-	print_set(a);
-	nl;
 	
-	set* b = rand_set(20,10);
-	print_set(b);
-	print_set(shrink_sorted(b));
+	printf("\nRandom set b:\n");
+	set* b = rand_set(10,3);
+	print_set(b);	
 	
+	printf("\nIntersection of a and b:\n");
+	set* c = intersect_sorted(a,b);
+	print_set(c);
 	
-	b=shrink2(bubble_sort(b));
-	
-	set* c = intersect(a,b);
-	print_set(bubble_sort(c));
-	
-	set* d = intersect_sorted(a,b);
-	//copy_set(c);
-	print_set(shrink2(d));
+	printf("\nUnion of a and b:\n");
+	set* d = union_sorted(a,b);
+	print_set(d);
 
 	
 	free(a); free(b); free(c); free(d); 
