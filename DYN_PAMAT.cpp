@@ -4,14 +4,16 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define REP(i, a, b) for (int i=a; i<=b; i++)
+#define nl printf("\n")
 
 struct set {
 	int length;
-	int array[];
+	int array[]; // flexible member: https://en.wikipedia.org/wiki/Flexible_array_member
+	// if needed to axpand the struct add int* array; at the start
 };
 
 set* rand_set(int length, int maxnum){ //constructor of random set
+	srand(time(NULL));
 	set* ptr = (set*) malloc(sizeof(int)*(length+1));
 	(ptr->length) = length;
 	for(int i=0; i<length;i++){
@@ -21,10 +23,11 @@ set* rand_set(int length, int maxnum){ //constructor of random set
 };
 
 void print_set(set* ptr){
-	printf("\n %d - size of the set at 0x%.8X\n", ptr->length, ptr);
+	printf("\n 0x%.8X with the size %d \n", ptr, ptr->length);
 	for(int i=0; i < (ptr->length); i++){
 		printf("%d ", (ptr->array)[i]);
 	}
+	nl;
 }
 
 bool inside(int num, set* ptr){
@@ -37,7 +40,7 @@ bool inside(int num, set* ptr){
 }
 
 set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
-	//works as expected
+	//works as expected, O(n^2)
 	int minlen = (ptr1->length) < (ptr2->length) ? (ptr1->length) : (ptr2->length); 
 	set* newptr = (set*) malloc(sizeof(int)*(minlen+1)); //might allocate bigger than needed, but a minimal safe size: intersection cannot be smaller than the first set
 	newptr->length = 0;
@@ -50,8 +53,32 @@ set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
 	return newptr;
 }
 
+set* intersect_sorted(set* ptr1, set*ptr2){ //pointer to a new set
+	// O(n+m), not yet working correctly
+	int minlen = (ptr1->length) < (ptr2->length) ? (ptr1->length) : (ptr2->length); 
+	set* newptr = (set*) malloc(sizeof(int)*(minlen+1));
+	int index1 = 0;
+	int index2 = 0;
+	newptr->length = 0;
+	int a1=ptr1->array[index1];
+	int a2=ptr2->array[index2];
+	int recent;
+	while( index1 < ptr1->length && index2 < ptr2->length ){
+		if( ptr1->array[index1++] < ptr2->array[index2]){
+			newptr->array[newptr->length] = ptr1->array[index1];
+		} else if (ptr1->array[index1] > ptr2->array[index2++]){
+			newptr->array[newptr->length] = ptr2->array[index2];
+		} else {
+			newptr->array[newptr->length] = ptr2->array[index2];
+			index1++;	index2++;
+		}
+		newptr->length++;
+	}
+	return newptr;
+}
+
 set* bubble_sort(set* ptr){ //return the same pointer 
-	//works as expected
+	//works as expected, O(n^2)
 	int helper;
 	for(int i=0; i < ptr->length-1; i++){
 		for(int j = 0; j < ptr->length-i-1; j++){
@@ -66,7 +93,7 @@ set* bubble_sort(set* ptr){ //return the same pointer
 }
 
 set* copy_set(set* ptr){
-	//not working correctly
+	//working correctly, O(n)
 	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
 	newptr->length = ptr->length;
 	for(int i=0; i < newptr->length; i++){
@@ -75,15 +102,24 @@ set* copy_set(set* ptr){
 	return newptr;
 }
 
-set* copy2_set(set* ptr){
-	//not working correctly
+set* shrink_sorted(set* ptr){ // O(n), return new ptr
+	int recent=ptr->array[0];
+	
 	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
-	*newptr = *ptr;
+	newptr->array[0] = recent;
+	newptr->length = 1;
+	for(int i=1; i<ptr->length; i++){
+		if( ptr->array[i] != recent){
+			recent = ptr->array[i];
+			newptr->array[newptr->length] = recent;
+			newptr->length++;
+		}
+	}
 	return newptr;
 }
 
-set* shrink(set* ptr){ //return the same pointer 
-	//not working correctly
+set* shrink2(set* ptr){ //return the same pointer 
+	//working correctly O(n^2)
 	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
 	newptr->length = 0;
 	for(int i=0; i<ptr->length; i++){
@@ -92,71 +128,35 @@ set* shrink(set* ptr){ //return the same pointer
 			newptr->length++;
 		}
 	}
-	*ptr = *newptr;
+	ptr = copy_set(newptr); //*ptr = *newptr;
 	free(newptr);
 	return ptr;
 }
 
-//
-//int * truncate(int *a, int last_index){
-//	int result[last_index+1];
-//	for(int i = 0; i<last_index+1; i++){
-//		result[i] = a[i];
-//	}
-//	return result;
-//	
-//}
-
-//int * prienik( int *a, int *b){
-//	int result[];
-//	int asize = sizeof(a)/4;
-//	int bsize = sizeof(a)/4;
-//	int index_res = 0;
-//	for (int i = 0; i<asize; i++){
-//		for (int j = 0; j<bsize; j++){
-//			if(a[i]==b[j] and !inside(a[i], result)){
-//				result[index_res] = a[i];
-//				index_res++;
-//			}
-//		}
-//	}
-//	//truncate result
-//	result = truncate(result, index_res);
-//	return result;
-//}
-
-//int * zjednotenie( int *a, int *b){
-//	int result[20];
-//	int asize = sizeof(a)/4;
-//	int bsize = sizeof(a)/4;
-//	int index_res = 0;
-//	for (int i = 0; i<asize; i++){
-//		if(inside( a[i], b)){
-//			result[index_res] = a[i];
-//		};
-//	}
-//	//truncate result
-//	result = truncate(result, index_res);
-//	return result;
-//}
-
 int main(){
-	srand(time(NULL));
+	
 	set* a = rand_set(10,10);
 	print_set(a);
-	set* b = rand_set(10,10);
+	a=shrink2(bubble_sort(a));
+	print_set(a);
+	nl;
+	
+	set* b = rand_set(20,10);
 	print_set(b);
+	print_set(shrink_sorted(b));
+	
+	
+	b=shrink2(bubble_sort(b));
 	
 	set* c = intersect(a,b);
 	print_set(bubble_sort(c));
 	
-	set* d = copy_set(c);
-	print_set(shrink(d));
+	set* d = intersect_sorted(a,b);
+	//copy_set(c);
+	print_set(shrink2(d));
+
 	
-	set* e = copy2_set(c);
-	print_set(shrink(e));
-	
-	//printf("\n %d ", inside(5,b));
-	
-	free(a); free(b); free(c); free(d); free(e);
+	free(a); free(b); free(c); free(d); 
 }
+
+//plans: union, create with variable amount of arguments
