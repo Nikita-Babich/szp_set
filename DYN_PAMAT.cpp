@@ -13,6 +13,8 @@ struct set {
 	// if needed to axpand the struct add int* array; at the start
 };
 
+#include"treesort.h"
+
 set* rand_set(int length, int maxstep){ //constructor of sorted random set
 	int value = 0;
 	set* ptr = (set*) malloc(sizeof(int)*(length+1));
