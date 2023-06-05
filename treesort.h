@@ -40,3 +40,10 @@ void tree_to_set(Node* root, set* arr, int &i){
 	}
 }
 
+Node* insert_branch(Node* root, int item){
+	if(root == NULL){
+		
+	}
+	return root;
+}
+
