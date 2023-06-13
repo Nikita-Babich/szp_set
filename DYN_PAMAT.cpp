@@ -53,9 +53,9 @@ Node* insert_branch(Node* root, int item){
 	if(root == NULL){
 		return newNode(item);
 	}
-	if(key < root->key){
+	if( Qsmaller(key, root->key) ){
 		root->left = insert_branch(root->left, item);
-	} else if (key >= root->right) {
+	} else {
 		root->right = insert_branch(root->right, item)
 	}
 	return root;
