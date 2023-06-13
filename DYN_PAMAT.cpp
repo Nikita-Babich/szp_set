@@ -9,9 +9,11 @@
 
 struct set {
 	int length;
-	int array[]; // flexible member: https://en.wikipedia.org/wiki/Flexible_array_member
-	// if needed to axpand the struct add int* array; at the start
+	int array[]; // flexible member, has to be at the end: https://en.wikipedia.org/wiki/Flexible_array_member
+	// if needed to expand the struct, add new elements before "int array[];"
 };
+
+
 
 //----- start of treesort part
 struct Node {
@@ -21,14 +23,16 @@ struct Node {
 }
 
 struct Node* newNode(int item){
-	struct Node* ptr = (struct Node*) malloc(sizeof(struct Node));
+	struct Node* ptr = (struct Node*) malloc(sizeof(struct Node)); //has constant size
 	ptr->key = item;
 	ptr->left = NULL;
 	ptr->right = NULL;
 	return ptr;
 }
 
-bool compare(int item1, int item2){
+bool Qsmaller(int item1, int item2){
+	//function can be changed to compare not only numbers
+	// Q stands for Question
 	if(item2 > item1){
 		return true;
 	}
@@ -47,11 +51,18 @@ void tree_to_set(Node* root, set* arr, int &i){
 
 Node* insert_branch(Node* root, int item){
 	if(root == NULL){
-		
+		return newNode(item);
+	}
+	if(key < root->key){
+		root->left = insert_branch(root->left, item);
+	} else if (key >= root->right) {
+		root->right = insert_branch(root->right, item)
 	}
 	return root;
 }
 //-----end of treesort part
+
+
 
 //-----start of set functions
 set* rand_set(int length, int maxstep){ //constructor of sorted random set
@@ -130,7 +141,8 @@ set* intersect_sorted(set* ptr1, set*ptr2){ //pointer to a new set
 	return newptr;
 }
 
-set* union_sorted(set* ptr1, set*ptr2){
+set* union_sorted(set* ptr1, set*ptr2){ //pointer to a new set
+	// O(n+m)
 	int maxlen = ptr1->length + ptr2->length ; 
 	set* newptr = (set*) malloc(sizeof(int)*(maxlen+1));
 	int index1 = 0;
@@ -164,7 +176,7 @@ set* union_sorted(set* ptr1, set*ptr2){
 }
 
 set* bubble_sort(set* ptr){ //return the same pointer 
-	//works as expected, O(n^2)
+	//O(n^2)
 	int helper;
 	for(int i=0; i < ptr->length-1; i++){
 		for(int j = 0; j < ptr->length-i-1; j++){
