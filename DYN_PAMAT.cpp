@@ -7,6 +7,8 @@
 
 #define nl printf("\n")
 
+#define TEST1 // TEST2
+
 struct set {
 	int length;
 	int array[]; // flexible member, has to be at the end: https://en.wikipedia.org/wiki/Flexible_array_member
@@ -40,12 +42,16 @@ bool Qsmaller(int item1, int item2){
 }
 
 void tree_to_set(Node* root, set* arr, int &i){
-	// the sorted result into set
+	// convert the sorted result into set
+	/* By using a reference parameter (int &i), 
+	any changes made to the i variable inside the function 
+	will be reflected outside the function as well. 
+	*/
 	if (root != NULL){
-		storeSorted(root->left, arr, i);
+		tree_to_set(root->left, arr, i);
 		arr->array[i] = root->key;
 		i++;
-		storeSorted(root->right, arr, i);
+		tree_to_set(root->right, arr, i);
 	}
 }
 
@@ -59,6 +65,18 @@ Node* insert_branch(Node* root, int item){
 		root->right = insert_branch(root->right, item)
 	}
 	return root;
+}
+
+set* treeSort(set* arr){ 
+	//return the same pointer
+	Node* root = NULL;
+	root = insert_branch(root, arr->array[0]);
+	for( int i=1; i < arr->length; i++){
+		root = insert_branch(root,arr->array[i]);
+	}
+	int j = 0;
+	tree_to_set(root, arr, j);
+	return arr;
 }
 //-----end of treesort part
 
@@ -231,6 +249,8 @@ set* shrink2(set* ptr){ //return the same pointer
 }
 
 int main(){
+	
+#IFDEF TEST1
 	srand(time(NULL));
 	printf("\nRandom set a:");
 	set* a = rand_set(10,3);
@@ -252,7 +272,7 @@ int main(){
 	set* e = create_set(10, 2,3,2,12,5,5,2,4,5,8);
 	print_set(e);
 	
-	printf("\n Sorted set e:");
+	printf("\n Bubble sorted set e:");
 	e = bubble_sort(e);
 	print_set(e);
 	
@@ -261,6 +281,11 @@ int main(){
 	print_set(c);
 	
 	printf("\n Now that 'cleaned set' c can be used with set functions");
+#ENDIF
+
+#IFDEF TEST2
+
+#ENDIF
 
 }
 
