@@ -7,13 +7,19 @@
 
 #define nl printf("\n")
 
-#define TEST1 // TEST2
+#define TREESORT_METHOD // BUBBLESORT_METHOD
 
 struct set {
 	int length;
 	int array[]; // flexible member, has to be at the end: https://en.wikipedia.org/wiki/Flexible_array_member
 	// if needed to expand the struct, add new elements before "int array[];"
 };
+
+void set_delete(set* arr){
+	free(arr);
+	/* Since the flexible array member is placed at the end of the structure and is allocated with the same malloc call, 
+	it will be automatically freed along with the rest of the structure.*/
+}
 
 
 
@@ -22,6 +28,15 @@ struct Node {
 	int key;
 	struct Node* left;
 	struct Node* right;
+};
+
+void tree_delete(Node* root){
+    if (root == NULL) {
+        return;
+    }
+    tree_delete(root->left);
+    tree_delete(root->right);
+    free(root);
 }
 
 struct Node* newNode(int item){
@@ -33,7 +48,7 @@ struct Node* newNode(int item){
 }
 
 bool Qsmaller(int item1, int item2){
-	//function can be changed to compare not only numbers
+	//this function can be changed to compare and sort not only numbers
 	// Q stands for Question
 	if(item2 > item1){
 		return true;
@@ -45,7 +60,7 @@ void tree_to_set(Node* root, set* arr, int &i){
 	// convert the sorted result into set
 	/* By using a reference parameter (int &i), 
 	any changes made to the i variable inside the function 
-	will be reflected outside the function as well. 
+	will be reflected outside the function as well, on the other scopes of the recursion tree as well.
 	*/
 	if (root != NULL){
 		tree_to_set(root->left, arr, i);
@@ -59,16 +74,15 @@ Node* insert_branch(Node* root, int item){
 	if(root == NULL){
 		return newNode(item);
 	}
-	if( Qsmaller(key, root->key) ){
+	if( Qsmaller(item, root->key) ){
 		root->left = insert_branch(root->left, item);
 	} else {
-		root->right = insert_branch(root->right, item)
+		root->right = insert_branch(root->right, item);
 	}
 	return root;
 }
 
-set* treeSort(set* arr){ 
-	//return the same pointer
+set* tree_sort(set* arr){ //return the same pointer
 	Node* root = NULL;
 	root = insert_branch(root, arr->array[0]);
 	for( int i=1; i < arr->length; i++){
@@ -76,6 +90,7 @@ set* treeSort(set* arr){
 	}
 	int j = 0;
 	tree_to_set(root, arr, j);
+	tree_delete(root);
 	return arr;
 }
 //-----end of treesort part
@@ -123,8 +138,19 @@ bool inside(int num, set* ptr){
 	return false;
 }
 
+bool inside_sorted(int num, set* ptr){
+	for (int i = 0; i<ptr->length; i++){
+		if(num==ptr->array[i]){
+			return true;
+		} else if (num < ptr->array[i]) {
+			return false;
+		}
+	}
+	return false;
+}
+
 set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
-	//works as expected, O(n^2)
+	//O(n^2)
 	int minlen = (ptr1->length) < (ptr2->length) ? (ptr1->length) : (ptr2->length); 
 	set* newptr = (set*) malloc(sizeof(int)*(minlen+1)); //might allocate bigger than needed, but a minimal safe size: intersection cannot be smaller than the first set
 	newptr->length = 0;
@@ -138,7 +164,7 @@ set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
 }
 
 set* intersect_sorted(set* ptr1, set*ptr2){ //pointer to a new set
-	// O(n+m), working correctly
+	// O(n+m)
 	int minlen = (ptr1->length) < (ptr2->length) ? (ptr1->length) : (ptr2->length); 
 	set* newptr = (set*) malloc(sizeof(int)*(minlen+1));
 	int index1 = 0;
@@ -209,7 +235,7 @@ set* bubble_sort(set* ptr){ //return the same pointer
 }
 
 set* copy_set(set* ptr){
-	//working correctly, O(n)
+	// O(n)
 	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
 	newptr->length = ptr->length;
 	for(int i=0; i < newptr->length; i++){
@@ -234,7 +260,7 @@ set* shrink_sorted(set* ptr){ // O(n), return new ptr
 }
 
 set* shrink2(set* ptr){ //return the same pointer 
-	//working correctly O(n^2)
+	//O(n^2)
 	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
 	newptr->length = 0;
 	for(int i=0; i<ptr->length; i++){
@@ -249,8 +275,6 @@ set* shrink2(set* ptr){ //return the same pointer
 }
 
 int main(){
-	
-#IFDEF TEST1
 	srand(time(NULL));
 	printf("\nRandom set a:");
 	set* a = rand_set(10,3);
@@ -269,24 +293,25 @@ int main(){
 	print_set(c); free(c);
 	
 	printf("\n Handcrafted set e:");
-	set* e = create_set(10, 2,3,2,12,5,5,2,4,5,8);
+	set* e = create_set(11, 2,3,2,12,5,5,2,4,5,8,-6);
 	print_set(e);
 	
+#ifdef BUBBLESORT_METHOD	
 	printf("\n Bubble sorted set e:");
 	e = bubble_sort(e);
 	print_set(e);
-	
+#endif	
+
+#ifdef TREESORT_METHOD
+	printf("\n Tree sorted set e:");
+	e = tree_sort(e);
+	print_set(e);
+#endif
+
 	printf("\n New set c equals shrunk set e:");
 	c = shrink_sorted(e);
 	print_set(c);
 	
-	printf("\n Now that 'cleaned set' c can be used with set functions");
-#ENDIF
-
-#IFDEF TEST2
-
-#ENDIF
+	printf("\n Now that 'cleaned set' c can be used with set functions, because it is sorted and shrunk");
 
 }
-
-//plans: union, create with variable amount of arguments
