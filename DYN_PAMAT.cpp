@@ -41,6 +41,9 @@ void tree_delete(Node* root){
 
 struct Node* newNode(int item){
 	struct Node* ptr = (struct Node*) malloc(sizeof(struct Node)); //has constant size
+	if(ptr == NULL){
+		return NULL;
+	}
 	ptr->key = item;
 	ptr->left = NULL;
 	ptr->right = NULL;
@@ -62,17 +65,18 @@ void tree_to_set(Node* root, set* arr, int &i){
 	any changes made to the i variable inside the function 
 	will be reflected outside the function as well, on the other scopes of the recursion tree as well.
 	*/
-	if (root != NULL){
+	if (root != NULL){ //if tree is failed to be created then nothing is done to arr
 		tree_to_set(root->left, arr, i);
 		arr->array[i] = root->key;
 		i++;
 		tree_to_set(root->right, arr, i);
 	}
+	return;
 }
 
 Node* insert_branch(Node* root, int item){
 	if(root == NULL){
-		return newNode(item);
+		return newNode(item); //if newnode failed, will pass NULL forward automatically
 	}
 	if( Qsmaller(item, root->key) ){
 		root->left = insert_branch(root->left, item);
@@ -101,6 +105,9 @@ set* tree_sort(set* arr){ //return the same pointer
 set* rand_set(int length, int maxstep){ //constructor of sorted random set
 	int value = 0;
 	set* ptr = (set*) malloc(sizeof(int)*(length+1));
+	if(ptr == NULL){
+		return NULL;
+	}
 	(ptr->length) = length;
 	for(int i=0; i<length;i++){
 		value += 1+rand()%maxstep;
@@ -113,6 +120,9 @@ set* create_set(int length, ...){
 	va_list valist;
 	va_start(valist, length);
 	set* ptr = (set*) malloc(sizeof(int)*(length+1));
+	if(ptr == NULL){
+		return NULL;
+	}
 	(ptr->length) = length;
 	for(int i=0; i<length;i++){
 		(ptr->array)[i] = va_arg(valist, int);
@@ -122,14 +132,22 @@ set* create_set(int length, ...){
 }
 
 void print_set(set* ptr){
-	printf("\n 0x%.8X with the size %d \n", ptr, ptr->length);
-	for(int i=0; i < (ptr->length); i++){
-		printf("%d ", (ptr->array)[i]);
+	if(ptr == NULL){
+		printf("\nSomething failed and ptr contains NULL.\n");
+	} else {
+		printf("\n 0x%.8X with the size %d \n", ptr, ptr->length);
+		for(int i=0; i < (ptr->length); i++){
+			printf("%d ", (ptr->array)[i]);
+		}
+		nl;
 	}
-	nl;
+	return;
 }
 
 bool inside(int num, set* ptr){
+	if(ptr == NULL){
+		return false;
+	}
 	for (int i = 0; i<ptr->length; i++){
 		if(num==ptr->array[i]){
 			return true;
@@ -139,8 +157,11 @@ bool inside(int num, set* ptr){
 }
 
 bool inside_sorted(int num, set* ptr){
+	if(ptr == NULL){
+		return false;
+	}
 	for (int i = 0; i<ptr->length; i++){
-		if(num==ptr->array[i]){
+		if(num == ptr->array[i]){
 			return true;
 		} else if (num < ptr->array[i]) {
 			return false;
@@ -153,6 +174,9 @@ set* intersect(set* ptr1, set* ptr2){ //pointer to a new set
 	//O(n^2)
 	int minlen = (ptr1->length) < (ptr2->length) ? (ptr1->length) : (ptr2->length); 
 	set* newptr = (set*) malloc(sizeof(int)*(minlen+1)); //might allocate bigger than needed, but a minimal safe size: intersection cannot be smaller than the first set
+	if(newptr == NULL){
+		return NULL;
+	}
 	newptr->length = 0;
 	for (int i = 0; i<ptr1->length; i++){
 		if(inside(ptr1->array[i], ptr2)){
@@ -167,6 +191,9 @@ set* intersect_sorted(set* ptr1, set*ptr2){ //pointer to a new set
 	// O(n+m)
 	int minlen = (ptr1->length) < (ptr2->length) ? (ptr1->length) : (ptr2->length); 
 	set* newptr = (set*) malloc(sizeof(int)*(minlen+1));
+	if(newptr == NULL){
+		return NULL;
+	}
 	int index1 = 0;
 	int index2 = 0;
 	newptr->length = 0;
@@ -189,6 +216,9 @@ set* union_sorted(set* ptr1, set*ptr2){ //pointer to a new set
 	// O(n+m)
 	int maxlen = ptr1->length + ptr2->length ; 
 	set* newptr = (set*) malloc(sizeof(int)*(maxlen+1));
+	if(newptr == NULL){
+		return NULL;
+	}
 	int index1 = 0;
 	int index2 = 0;
 	newptr->length = 0;
@@ -237,6 +267,9 @@ set* bubble_sort(set* ptr){ //return the same pointer
 set* copy_set(set* ptr){
 	// O(n)
 	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
+	if(newptr == NULL){
+		return NULL;
+	}
 	newptr->length = ptr->length;
 	for(int i=0; i < newptr->length; i++){
 		newptr->array[i] = ptr->array[i];
@@ -247,6 +280,9 @@ set* copy_set(set* ptr){
 set* shrink_sorted(set* ptr){ // O(n), return new ptr
 	int recent=ptr->array[0];
 	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
+	if(newptr == NULL){
+		return NULL;
+	}
 	newptr->array[0] = recent;
 	newptr->length = 1;
 	for(int i=1; i<ptr->length; i++){
@@ -259,9 +295,12 @@ set* shrink_sorted(set* ptr){ // O(n), return new ptr
 	return newptr;
 }
 
-set* shrink2(set* ptr){ //return the same pointer 
+set* shrink2(set* ptr){ //return pointer to a new object
 	//O(n^2)
 	set* newptr = (set*) malloc(sizeof(int)*(ptr->length+1));
+	if(newptr == NULL){
+		return NULL; 
+	}
 	newptr->length = 0;
 	for(int i=0; i<ptr->length; i++){
 		if( !(inside(ptr->array[i], newptr)) ){
@@ -269,9 +308,7 @@ set* shrink2(set* ptr){ //return the same pointer
 			newptr->length++;
 		}
 	}
-	ptr = copy_set(newptr);
-	free(newptr);
-	return ptr;
+	return newptr;
 }
 
 int main(){
